@@ -9,7 +9,4 @@ resource rg 'Microsoft.Resources/resourceGroups@2024-03-01' = {
 module aks './aks.bicep' = {
   name: 'aksDeployment'
   scope: rg
-  params: {
-    rg: rg.name
-  }
 }
