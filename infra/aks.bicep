@@ -4,7 +4,7 @@ param rg string
 // Bicep template for AKS Cluster
 resource aksCluster 'Microsoft.ContainerService/managedClusters@2024-09-01' = {
   name: 'aks-aso-example-prod-01'
-  location: rg
+  location: resourceGroup().location
   identity: {
     type: 'SystemAssigned'
   }
