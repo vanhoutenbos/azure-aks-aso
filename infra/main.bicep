@@ -2,7 +2,7 @@ targetScope = 'subscription'
 
 @description('Create a resource group')
 resource rg 'Microsoft.Resources/resourceGroups@2024-03-01' = {
-  name: 'rg-osa-example-prod-01'
+  name: 'rg-aso-example-prod-01'
   location: 'westeurope'
 }
 
