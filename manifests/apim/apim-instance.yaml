@@ -4,11 +4,11 @@ metadata:
   name: apim-instance
   namespace: flux-system
 spec:
-  location: eastus
+  location: westeurope
   sku:
     name: Developer
     capacity: 1
-  publisherEmail: admin@example.com
-  publisherName: ExamplePublisher
+  publisherEmail: github.com@vanhoutensolutions.nl
+  publisherName: JP
   identity:
     type: SystemAssigned

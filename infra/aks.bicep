@@ -20,7 +20,7 @@ resource aksCluster 'Microsoft.ContainerService/managedClusters@2024-09-01' = {
       networkPlugin: 'azure'
       loadBalancerSku: 'standard'
     }
-    kubernetesVersion: '1.30.11'
+    kubernetesVersion: '1.32.3'
     enableRBAC: true
   }
 }
