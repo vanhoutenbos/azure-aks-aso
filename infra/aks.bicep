@@ -26,7 +26,7 @@ resource aksCluster 'Microsoft.ContainerService/managedClusters@2024-09-01' = {
 }
 
 resource fluxConfig 'Microsoft.KubernetesConfiguration/fluxConfigurations@2023-05-01' = {
-  name: 'fluxConfig'
+  name: 'flux-configuration'
   scope: aksCluster
   properties: {
     namespace: 'flux-system'
