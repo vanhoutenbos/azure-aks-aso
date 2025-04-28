@@ -1,0 +1,14 @@
+apiVersion: apimanagement.azure.com/v1alpha1
+kind: ApiManagementService
+metadata:
+  name: apim-instance
+  namespace: flux-system
+spec:
+  location: eastus
+  sku:
+    name: Developer
+    capacity: 1
+  publisherEmail: admin@example.com
+  publisherName: ExamplePublisher
+  identity:
+    type: SystemAssigned
