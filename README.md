@@ -29,14 +29,31 @@ Ensure you are working in the correct Azure subscription:
 az account set --subscription <subscription_id_or_name>
 ```
 
-### 3. Create a Service Principal
+### 3. Activate AKS-ExtensionsManager
+I couldnt find a way to do this through bicep except some hacky script with `Microsoft.Resources/deploymentScripts@2020-10-01`
+So i did it by hand from Powershell
+
+```bash
+# Register AKS-ExtensionManager feature
+az feature register --namespace Microsoft.ContainerService --name AKS-ExtensionManager
+
+# Register required providers
+az provider register --namespace Microsoft.Kubernetes
+az provider register --namespace Microsoft.ContainerService
+az provider register --namespace Microsoft.KubernetesConfiguration
+
+# Wait for feature registration to complete (this may take several minutes)
+az feature show --namespace Microsoft.ContainerService --name AKS-ExtensionManager --output table
+```
+
+### 4. Create a Service Principal
 Create a Service Principal to manage Azure resources:
 ```bash
 az ad sp create-for-rbac --name <your-service-principal-name> --role Contributor --scopes /subscriptions/<your-subscription-id> --sdk-auth
 ```
 Copy the output as the whole JSON, which includes the `Client ID`, `Client Secret`, and `Tenant ID`.
 
-#### 3.1 Saving the output in github
+#### 4.1 Saving the output in github
 If you use github just like me than you need to save the output in github.
 
 1. Go to your GitHub repository (the-stratbook).
@@ -46,17 +63,17 @@ If you use github just like me than you need to save the output in github.
 1. Paste the entire JSON output from the Azure CLI command into the Secret value box.
 1. Click Add secret.
  
-### 4. Deploy the Infrastructure
+### 5. Deploy the Infrastructure
 To deploy the infrastructure you can use 2 methods, either you use the deploy.yaml and run it from Github or you run it by hand using the instruction below
 
-#### 4.1 Push to GitHub
+#### 5.1 Push to GitHub
 Push the repository to GitHub and configure the GitHub Actions workflow:
 ```bash
 git remote add origin <github-repo-url>
 git push -u origin main
 ```
 
-#### 4.2 Manually / locally
+#### 5.2 Manually / locally
 Run the following commands to deploy the infrastructure:
 
 ```bash
@@ -65,7 +82,7 @@ az deployment group create \
   --template-file infra/main.bicep
 ```
 
-### 5. Monitor Deployment
+### 6. Monitor Deployment
 The GitHub Actions workflow will automatically deploy the infrastructure and synchronize configurations. Monitor the workflow in the GitHub Actions tab of your repository.
 
 ## Project Structure
