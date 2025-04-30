@@ -25,3 +25,4 @@ jobs:
           --name github-deployment \
           --location westeurope \
           --template-file infra/main.bicep
+          --verbose
