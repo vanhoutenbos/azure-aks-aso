@@ -28,17 +28,17 @@ resource aksCluster 'Microsoft.ContainerService/managedClusters@2024-02-01' = {
     agentPoolProfiles: [
       {
         name: 'nodepool1'
-        count: 2 // Recommended to have at least 2 nodes for high availability
+        count: 1 // Recommended to have at least 3 nodes for high availability
         vmSize: 'Standard_DS2_v2'
         osType: 'Linux'
         mode: 'System'
         enableAutoScaling: true
         minCount: 1
         maxCount: 3
-        // Best practice: Use availability zones for production workloads
-        availabilityZones: [
-          '1', '2', '3'
-        ]
+        // TODO apply Best practice: Use availability zones for production workloads
+        //availabilityZones: [
+        //  '1', '2', '3'
+        //]
         upgradeSettings: {
           maxSurge: '33%' // Best practice for node upgrades
         }
@@ -113,9 +113,6 @@ resource fluxConfig 'Microsoft.KubernetesConfiguration/fluxConfigurations@2023-0
       }
     }
   }
-  dependsOn: [
-    aksCluster
-  ]
 }
 
 output aksClusterName string = aksCluster.name
