@@ -65,10 +65,10 @@ resource aksCluster 'Microsoft.ContainerService/managedClusters@2024-02-01' = {
         }
       }
     }
-    // Best practice: Enable auto-upgrade channel
-    autoUpgradeProfile: {
-      upgradeChannel: 'stable'
-    }
+    // Best practice: Enable auto-upgrade channel but its not supported in AKS LTS yet
+    //autoUpgradeProfile: {
+    //  upgradeChannel: 'stable'
+    //}
     // Best practice: Enable monitoring
     addonProfiles: {
       omsagent: {
