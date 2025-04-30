@@ -59,7 +59,8 @@ resource aksCluster 'Microsoft.ContainerService/managedClusters@2024-02-01' = {
     // Best practice: Enable Azure Defender for security
     securityProfile: {
       defender: {
-        logAnalyticsWorkspaceResourceId: null
+        // TODO create an analytics workspace and link it to the AKS cluster
+        //logAnalyticsWorkspaceResourceId: null
         securityMonitoring: {
           enabled: true
         }
@@ -70,11 +71,12 @@ resource aksCluster 'Microsoft.ContainerService/managedClusters@2024-02-01' = {
     //  upgradeChannel: 'stable'
     //}
     // Best practice: Enable monitoring
-    addonProfiles: {
-      omsagent: {
-        enabled: true
-      }
-    }
+    // TODO create an analytics workspace and link it to the AKS cluster
+    //addonProfiles: {
+    //  omsagent: {
+    //    enabled: true
+    //  }
+    //}
   }
 }
 
