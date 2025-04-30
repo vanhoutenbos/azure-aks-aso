@@ -82,41 +82,41 @@ resource aksCluster 'Microsoft.ContainerService/managedClusters@2024-02-01' = {
 }
 
 // Add Flux configuration
-//resource fluxConfig 'Microsoft.KubernetesConfiguration/fluxConfigurations@2023-05-01' = {
-//  name: 'flux-configuration'
-//  scope: aksCluster
-//  properties: {
-//    namespace: 'flux-system'
-//    sourceKind: 'GitRepository'
-//    gitRepository: {
-//      url: 'https://github.com/vanhoutenbos/azure-aks-aso'
-//      repositoryRef: {
-//        branch: 'main'
-//      }
-//      syncIntervalInSeconds: 300 // 5 minutes sync interval
-//      timeoutInSeconds: 600 // 10 minutes timeout
-//    }
-//    kustomizations: {
-//      operator: {
-//        path: './manifests/operator'
-//        prune: true
-//        wait: true
-//        timeoutInSeconds: 600 // 10 minutes timeout
-//        retryIntervalInSeconds: 60 // 1 minute retry interval
-//      }
-//      apim: {
-//        path: './manifests/apim'
-//        prune: true
-//        wait: true
-//        timeoutInSeconds: 600
-//        retryIntervalInSeconds: 60
-//        dependsOn: [
-//          'operator'
-//        ]
-//      }
-//    }
-//  }
-//}
+resource fluxConfig 'Microsoft.KubernetesConfiguration/fluxConfigurations@2023-05-01' = {
+  name: 'flux-configuration'
+  scope: aksCluster
+  properties: {
+    namespace: 'flux-system'
+    sourceKind: 'GitRepository'
+    gitRepository: {
+      url: 'https://github.com/vanhoutenbos/azure-aks-aso'
+      repositoryRef: {
+        branch: 'main'
+      }
+      syncIntervalInSeconds: 300 // 5 minutes sync interval
+      timeoutInSeconds: 600 // 10 minutes timeout
+    }
+    //kustomizations: {
+    //  operator: {
+    //    path: './manifests/operator'
+    //    prune: true
+    //    wait: true
+    //    timeoutInSeconds: 600 // 10 minutes timeout
+    //    retryIntervalInSeconds: 60 // 1 minute retry interval
+    //  }
+    //  apim: {
+    //    path: './manifests/apim'
+    //    prune: true
+    //    wait: true
+    //    timeoutInSeconds: 600
+    //    retryIntervalInSeconds: 60
+    //    dependsOn: [
+    //      'operator'
+    //    ]
+    //  }
+    //}
+  }
+}
 
 output aksClusterName string = aksCluster.name
 output aksClusterId string = aksCluster.id
