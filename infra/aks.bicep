@@ -57,15 +57,16 @@ resource aksCluster 'Microsoft.ContainerService/managedClusters@2024-02-01' = {
       enableAzureRBAC: true
     }
     // Best practice: Enable Azure Defender for security
-    securityProfile: {
-      defender: {
-        // TODO create an analytics workspace and link it to the AKS cluster
-        //logAnalyticsWorkspaceResourceId: null
-        securityMonitoring: {
-          enabled: true
-        }
-      }
-    }
+    //TODO: create an analytics workspace and link it to the AKS cluster
+    //securityProfile: {
+    //  defender: {
+    //    // TODO create an analytics workspace and link it to the AKS cluster
+    //    //logAnalyticsWorkspaceResourceId: null
+    //    securityMonitoring: {
+    //      enabled: true
+    //    }
+    //  }
+    //}
     // Best practice: Enable auto-upgrade channel but its not supported in AKS LTS yet
     //autoUpgradeProfile: {
     //  upgradeChannel: 'stable'
