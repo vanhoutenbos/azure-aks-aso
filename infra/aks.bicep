@@ -1,64 +1,62 @@
-//TODO: Enable private cluster for better security, but for testing we can start with public access
-//@description('User name for the Linux Virtual Machines.')
-//param linuxAdminUsername string = 'aksadmin'
-//
-//@description('Configure all linux machines with the SSH RSA public key string. Your key should include three parts, for example \'ssh-rsa AAAAB...snip...UcyupgH azureuser@linuxvm\'')
-//@secure()
-//param sshRSAPublicKey string
-
 // Use a valid AKS LTS version
 @description('Kubernetes version to use')
 param kubernetesVersion string = '1.27.7'
 
+@description('Environment name (e.g., prod, dev, test)')
+param environment string = 'prod'
+
+@description('Location for all resources')
+param location string = resourceGroup().location
+
+@description('Cluster name')
+param clusterName string = 'aks-aso-example-${environment}-01'
+
+// Generate SSH keys for the cluster if none are provided
 resource aksCluster 'Microsoft.ContainerService/managedClusters@2024-02-01' = {
-  name: 'aks-aso-example-prod-01'
-  location: resourceGroup().location
+  name: clusterName
+  location: location
   identity: {
     type: 'SystemAssigned'
   }
+  sku: {
+    name: 'Base'
+    tier: 'Premium' // Premium tier as specified in the command
+  }
   properties: {
-    dnsPrefix: 'aks-aso-prod-01'
+    dnsPrefix: 'aks-aso-${environment}-01'
+    supportPlan: 'AKSLongTermSupport' // AKS Long-Term Support as specified in the command
     agentPoolProfiles: [
       {
         name: 'nodepool1'
-        count: 1 // TODO: Minimum 2 nodes for production workloads, but for testing we can start with 1 node
+        count: 2 // Recommended to have at least 2 nodes for high availability
         vmSize: 'Standard_DS2_v2'
         osType: 'Linux'
         mode: 'System'
         enableAutoScaling: true
         minCount: 1
         maxCount: 3
-        // TODO: Add availability zones for high availability, but for testing we can start with 1 zone
-        //availabilityZones: [
-        //  '1', '2', '3'
-        //]
+        // Best practice: Use availability zones for production workloads
+        availabilityZones: [
+          '1', '2', '3'
+        ]
+        upgradeSettings: {
+          maxSurge: '33%' // Best practice for node upgrades
+        }
       }
     ]
     networkProfile: {
       networkPlugin: 'azure' 
       loadBalancerSku: 'standard'
-      // Enable network policy for better security
-      networkPolicy: 'calico'
+      networkPolicy: 'calico' // Best practice: Enable network policy
     }
-    //TODO: Enable private cluster for better security, but for testing we can start with public access
-    //linuxProfile: {
-    //  adminUsername: linuxAdminUsername
-    //  ssh: {
-    //    publicKeys: [
-    //      {
-    //        keyData: sshRSAPublicKey
-    //      }
-    //    ]
-    //  }
-    //}
     kubernetesVersion: kubernetesVersion
     enableRBAC: true
-    // Add Azure AD integration for better authentication
+    // Best practice: Enable Azure AD integration
     aadProfile: {
       managed: true
       enableAzureRBAC: true
     }
-    // Add Azure Defender for better security
+    // Best practice: Enable Azure Defender for security
     securityProfile: {
       defender: {
         logAnalyticsWorkspaceResourceId: null
@@ -67,10 +65,20 @@ resource aksCluster 'Microsoft.ContainerService/managedClusters@2024-02-01' = {
         }
       }
     }
+    // Best practice: Enable auto-upgrade channel
+    autoUpgradeProfile: {
+      upgradeChannel: 'stable'
+    }
+    // Best practice: Enable monitoring
+    addonProfiles: {
+      omsagent: {
+        enabled: true
+      }
+    }
   }
 }
 
-// Add a delay before deploying Flux to ensure AKS is fully provisioned
+// Add Flux configuration
 resource fluxConfig 'Microsoft.KubernetesConfiguration/fluxConfigurations@2023-05-01' = {
   name: 'flux-configuration'
   scope: aksCluster
@@ -105,6 +113,9 @@ resource fluxConfig 'Microsoft.KubernetesConfiguration/fluxConfigurations@2023-0
       }
     }
   }
+  dependsOn: [
+    aksCluster
+  ]
 }
 
 output aksClusterName string = aksCluster.name
