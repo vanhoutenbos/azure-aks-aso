@@ -47,7 +47,7 @@ resource aksCluster 'Microsoft.ContainerService/managedClusters@2024-02-01' = {
     networkProfile: {
       networkPlugin: 'azure' 
       loadBalancerSku: 'standard'
-      networkPolicy: 'calico' // Best practice: Enable network policy
+      //networkPolicy: 'calico' // Best practice: Enable network policy but its not supported in AKS LTS yet
     }
     kubernetesVersion: kubernetesVersion
     enableRBAC: true
