@@ -44,6 +44,10 @@ az provider register --namespace Microsoft.KubernetesConfiguration
 
 # Wait for feature registration to complete (this may take several minutes)
 az feature show --namespace Microsoft.ContainerService --name AKS-ExtensionManager --output table
+
+# Activate extensions
+az extension add --name connectedk8s
+az extension add --name k8s-extension
 ```
 
 ### 4. Create a Service Principal

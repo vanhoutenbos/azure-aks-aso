@@ -27,21 +27,21 @@ resource aksCluster 'Microsoft.ContainerService/managedClusters@2024-02-01' = {
     supportPlan: 'AKSLongTermSupport' // AKS Long-Term Support as specified in the command
     agentPoolProfiles: [
       {
-        name: 'nodepool1'
+        name: 'agentpool'
         count: 1 // Recommended to have at least 3 nodes for high availability
         vmSize: 'Standard_DS2_v2'
         osType: 'Linux'
         mode: 'System'
-        enableAutoScaling: true
-        minCount: 1
-        maxCount: 3
+        //enableAutoScaling: true
+        //minCount: 1
+        //maxCount: 3
         // TODO apply Best practice: Use availability zones for production workloads
         //availabilityZones: [
         //  '1', '2', '3'
         //]
-        upgradeSettings: {
-          maxSurge: '33%' // Best practice for node upgrades
-        }
+        //upgradeSettings: {
+        //  maxSurge: '33%' // Best practice for node upgrades
+        //}
       }
     ]
     networkProfile: {
@@ -130,11 +130,31 @@ resource aksCluster 'Microsoft.ContainerService/managedClusters@2024-02-01' = {
 //  }
 //}
 
+resource fluxExtension 'Microsoft.KubernetesConfiguration/extensions@2024-11-01' = {
+  name: 'flux'
+  scope: aksCluster
+  identity: {
+    type: 'SystemAssigned'
+  }
+  properties: {
+    extensionType: 'microsoft.flux'
+    autoUpgradeMinorVersion: true
+    scope: {
+      cluster: {
+        releaseNamespace: 'flux-system'
+      }
+    }
+  }
+}
+
+
 // Add Flux configuration
 resource fluxConfig 'Microsoft.KubernetesConfiguration/fluxConfigurations@2023-05-01' = {
   name: 'flux-configuration'
   scope: aksCluster
+  dependsOn: [ fluxExtension ]
   properties: {
+    scope: 'cluster'
     namespace: 'flux-system'
     sourceKind: 'GitRepository'
     gitRepository: {
