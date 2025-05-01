@@ -81,55 +81,6 @@ resource aksCluster 'Microsoft.ContainerService/managedClusters@2024-02-01' = {
   }
 }
 
-// What is better, this or the manual script from readme!?
-//resource registerFeatureAndProviders 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
-//  name: 'register-aks-features-and-providers'
-//  location: location
-//  kind: 'AzureCLI'
-//  identity: {
-//    type: 'UserAssigned'
-//    userAssignedIdentities: {
-//      '<your-managed-identity-resource-id>': {} // Replace with your managed identity
-//    }
-//  }
-//  properties: {
-//    azCliVersion: '2.42.0'
-//    timeout: 'PT30M'
-//    retentionInterval: 'P1D'
-//    environmentVariables: [
-//      {
-//        name: 'AZURE_SUBSCRIPTION_ID'
-//        value: subscription().subscriptionId
-//      }
-//    ]
-//    scriptContent: '''
-//      # Register AKS-ExtensionManager feature
-//      az feature register --namespace Microsoft.ContainerService --name AKS-ExtensionManager
-//      
-//      # Register required providers
-//      az provider register --namespace Microsoft.Kubernetes
-//      az provider register --namespace Microsoft.ContainerService
-//      az provider register --namespace Microsoft.KubernetesConfiguration
-//      
-//      # Wait for feature registration to complete
-//      echo "Waiting for feature registration to complete..."
-//      az feature show --namespace Microsoft.ContainerService --name AKS-ExtensionManager --query properties.state -o tsv
-//      
-//      # Wait for providers to register
-//      echo "Waiting for providers to register..."
-//      for provider in Microsoft.Kubernetes Microsoft.ContainerService Microsoft.KubernetesConfiguration; do
-//        state=$(az provider show --namespace $provider --query registrationState -o tsv)
-//        while [ "$state" != "Registered" ]; do
-//          echo "$provider registration state: $state"
-//          sleep 30
-//          state=$(az provider show --namespace $provider --query registrationState -o tsv)
-//        done
-//        echo "$provider registration completed."
-//      done
-//    '''
-//  }
-//}
-
 resource fluxExtension 'Microsoft.KubernetesConfiguration/extensions@2024-11-01' = {
   name: 'flux'
   scope: aksCluster
@@ -165,29 +116,26 @@ resource fluxConfig 'Microsoft.KubernetesConfiguration/fluxConfigurations@2023-0
       syncIntervalInSeconds: 300 // 5 minutes sync interval
       timeoutInSeconds: 600 // 10 minutes timeout
     }
-    //kustomizations: {
-    //  operator: {
-    //    path: './manifests/operator'
-    //    prune: true
-    //    wait: true
-    //    timeoutInSeconds: 600 // 10 minutes timeout
-    //    retryIntervalInSeconds: 60 // 1 minute retry interval
-    //  }
-    //  apim: {
-    //    path: './manifests/apim'
-    //    prune: true
-    //    wait: true
-    //    timeoutInSeconds: 600
-    //    retryIntervalInSeconds: 60
-    //    dependsOn: [
-    //      'operator'
-    //    ]
-    //  }
-    //}
+    kustomizations: {
+      operator: {
+        path: './manifests/operator'
+        prune: true
+        wait: true
+        timeoutInSeconds: 600 // 10 minutes timeout
+        retryIntervalInSeconds: 60 // 1 minute retry interval
+      }
+      apim: {
+        path: './manifests/apim'
+        prune: true
+        wait: true
+        timeoutInSeconds: 600
+        retryIntervalInSeconds: 60
+        dependsOn: [
+          'operator'
+        ]
+      }
+    }
   }
-  //dependsOn: [
-  //  registerFeatureAndProviders
-  //]
 }
 
 output aksClusterName string = aksCluster.name
