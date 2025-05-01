@@ -24,7 +24,14 @@ jobs:
         az deployment sub create \
           --name github-deployment \
           --location westeurope \
-          --template-file infra/main.bicep 
+          --template-file infra/main.bicep
+
+   # Set the target Azure Kubernetes Service (AKS) cluster. 
+    - uses: azure/aks-set-context@v1
+      with:
+        creds: '${{ secrets.AZURE_CREDENTIALS }}'
+        cluster-name: 'aks-aso-example-prod-01'
+        resource-group: 'rg-aso-example-prod-01'
 
     - name: Create Kubernetes Secret for Azure Service Operator
       env:
