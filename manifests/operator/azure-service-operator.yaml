@@ -1,37 +1,40 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: aso2
+  namespace: flux-system
+spec:
+  interval: 1h
+  url: https://raw.githubusercontent.com/Azure/azure-service-operator/main/v2/charts
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
 metadata:
   name: azure-service-operator
   namespace: flux-system
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: azure-service-operator
-  template:
-    metadata:
-      labels:
-        app: azure-service-operator
+  releaseName: azure-service-operator
+  chart:
     spec:
-      containers:
-      - name: operator
-        image: mcr.microsoft.com/oss/azure/azure-service-operator:v2.1.0
-        args:
-        - --settings=configmap
-        env:
-        - name: AZURE_TENANT_ID
-          valueFrom:
-            secretKeyRef:
-              name: azure-credentials
-              key: tenantId
-        - name: AZURE_CLIENT_ID
-          valueFrom:
-            secretKeyRef:
-              name: azure-credentials
-              key: clientId
-        - name: AZURE_CLIENT_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: azure-credentials
-              key: clientSecret
-      restartPolicy: Always
+      chart: azure-service-operator
+      sourceRef:
+        kind: HelmRepository
+        name: aso2
+        namespace: flux-system
+      version: "2.1.0"
+  interval: 5m
+  install:
+    createNamespace: true
+  valuesFrom:
+    - kind: Secret
+      name: azure-credentials
+      valuesKey: tenantId
+      targetPath: azureTenantId
+    - kind: Secret
+      name: azure-credentials
+      valuesKey: clientId
+      targetPath: azureClientId
+    - kind: Secret
+      name: azure-credentials
+      valuesKey: clientSecret
+      targetPath: azureClientSecret
