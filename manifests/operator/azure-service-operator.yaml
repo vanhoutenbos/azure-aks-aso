@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: operator
-        image: mcr.microsoft.com/oss/azure/azure-service-operator:v2.0.0
+        image: mcr.microsoft.com/oss/azure/azure-service-operator:v2.1.0
         args:
         - --settings=configmap
         env:

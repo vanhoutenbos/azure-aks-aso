@@ -32,52 +32,18 @@ resource aksCluster 'Microsoft.ContainerService/managedClusters@2024-02-01' = {
         vmSize: 'Standard_DS2_v2'
         osType: 'Linux'
         mode: 'System'
-        //enableAutoScaling: true
-        //minCount: 1
-        //maxCount: 3
-        // TODO apply Best practice: Use availability zones for production workloads
-        //availabilityZones: [
-        //  '1', '2', '3'
-        //]
-        //upgradeSettings: {
-        //  maxSurge: '33%' // Best practice for node upgrades
-        //}
       }
     ]
     networkProfile: {
       networkPlugin: 'azure' 
       loadBalancerSku: 'standard'
-      //networkPolicy: 'calico' // Best practice: Enable network policy but its not supported in AKS LTS yet
     }
     kubernetesVersion: kubernetesVersion
     enableRBAC: true
-    // Best practice: Enable Azure AD integration
     aadProfile: {
       managed: true
       enableAzureRBAC: true
     }
-    // Best practice: Enable Azure Defender for security
-    //TODO: create an analytics workspace and link it to the AKS cluster
-    //securityProfile: {
-    //  defender: {
-    //    // TODO create an analytics workspace and link it to the AKS cluster
-    //    //logAnalyticsWorkspaceResourceId: null
-    //    securityMonitoring: {
-    //      enabled: true
-    //    }
-    //  }
-    //}
-    // Best practice: Enable auto-upgrade channel but its not supported in AKS LTS yet
-    //autoUpgradeProfile: {
-    //  upgradeChannel: 'stable'
-    //}
-    // Best practice: Enable monitoring
-    // TODO create an analytics workspace and link it to the AKS cluster
-    //addonProfiles: {
-    //  omsagent: {
-    //    enabled: true
-    //  }
-    //}
   }
 }
 
@@ -98,8 +64,6 @@ resource fluxExtension 'Microsoft.KubernetesConfiguration/extensions@2024-11-01'
   }
 }
 
-
-// Add Flux configuration
 resource fluxConfig 'Microsoft.KubernetesConfiguration/fluxConfigurations@2023-05-01' = {
   name: 'flux-configuration'
   scope: aksCluster
@@ -113,16 +77,16 @@ resource fluxConfig 'Microsoft.KubernetesConfiguration/fluxConfigurations@2023-0
       repositoryRef: {
         branch: 'main'
       }
-      syncIntervalInSeconds: 300 // 5 minutes sync interval
-      timeoutInSeconds: 600 // 10 minutes timeout
+      syncIntervalInSeconds: 300
+      timeoutInSeconds: 600
     }
     kustomizations: {
       operator: {
         path: './manifests/operator'
         prune: true
         wait: true
-        timeoutInSeconds: 600 // 10 minutes timeout
-        retryIntervalInSeconds: 60 // 1 minute retry interval
+        timeoutInSeconds: 600 
+        retryIntervalInSeconds: 60 
       }
       apim: {
         path: './manifests/apim'
@@ -137,6 +101,3 @@ resource fluxConfig 'Microsoft.KubernetesConfiguration/fluxConfigurations@2023-0
     }
   }
 }
-
-output aksClusterName string = aksCluster.name
-output aksClusterId string = aksCluster.id
