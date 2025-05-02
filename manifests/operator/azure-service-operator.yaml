@@ -25,6 +25,8 @@ spec:
   interval: 5m
   install:
     createNamespace: true
+  values:
+    installCRDs: true
   valuesFrom:
     - kind: Secret
       name: azure-credentials
