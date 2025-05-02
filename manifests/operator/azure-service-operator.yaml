@@ -27,6 +27,7 @@ spec:
     createNamespace: true
   values:
     installCRDs: true
+    crdPattern: ".*"
   valuesFrom:
     - kind: Secret
       name: azure-credentials
