@@ -98,16 +98,6 @@ resource fluxConfig 'Microsoft.KubernetesConfiguration/fluxConfigurations@2023-0
           'cert'
         ]
       }
-      apim: {
-        path: './manifests/apim'
-        prune: true
-        wait: true
-        timeoutInSeconds: 600
-        retryIntervalInSeconds: 60
-        dependsOn: [
-          'operator'
-        ]
-      }
     }
   }
 }
