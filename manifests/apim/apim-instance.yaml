@@ -14,4 +14,3 @@ spec:
     type: SystemAssigned
   owner: 
     name: rg-aso-example-prod-01
-    kind: ResourceGroup
