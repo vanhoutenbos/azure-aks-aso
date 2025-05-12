@@ -13,4 +13,5 @@ spec:
   identity:
     type: SystemAssigned
   owner: 
-    id: "e26413eb-7863-45ca-88fc-c2e289fefc78"
+    name: rg-aso-example-prod-01
+    kind: ResourceGroup
