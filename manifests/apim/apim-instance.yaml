@@ -1,4 +1,4 @@
-apiVersion: apimanagement.azure.com/v1alpha1
+apiVersion: apimanagement.azure.com/v1api20220801
 kind: ApiManagementService
 metadata:
   name: apim-instance
