@@ -98,6 +98,16 @@ resource fluxConfig 'Microsoft.KubernetesConfiguration/fluxConfigurations@2023-0
           'cert'
         ]
       }
+      apim: {
+        path: './manifests/apim'  // Assuming you move apim-instance.yaml to this directory
+        prune: true
+        wait: true
+        timeoutInSeconds: 900  // APIM deployments can take longer
+        retryIntervalInSeconds: 60
+        dependsOn: [
+          'operator'  // Ensure ASO is deployed before APIM
+        ]
+      }
     }
   }
 }
