@@ -12,3 +12,4 @@ spec:
   publisherName: JP
   identity:
     type: SystemAssigned
+  owner: "e26413eb-7863-45ca-88fc-c2e289fefc78"
