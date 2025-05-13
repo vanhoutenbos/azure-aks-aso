@@ -2,7 +2,7 @@ apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
   name: aso2
-  namespace: flux-system
+  namespace: aso-system
 spec:
   interval: 1h
   url: https://raw.githubusercontent.com/Azure/azure-service-operator/main/v2/charts
@@ -11,7 +11,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: azure-service-operator
-  namespace: flux-system
+  namespace: aso-system
 spec:
   releaseName: azure-service-operator
   chart:
@@ -20,7 +20,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: aso2
-        namespace: flux-system
+        namespace: aso-system
       version: "2.*.*"
   interval: 5m
   install:

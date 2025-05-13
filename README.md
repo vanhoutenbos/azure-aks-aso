@@ -49,6 +49,10 @@ For networking I now use the default that Microsoft provides but for security re
 
 For production workload you should use [private AKS clusters](https://learn.microsoft.com/en-us/azure/aks/private-clusters), this way you prevent that you expose the Kubernetes API Server publicly 
 
+#### Create your own ACR
+
+You should create your own ACR instead of getting images directly from the source so that you can proxy/mirror those helm charts and not get rate limited.
+
 #### Disable local admin
 
 For security and audit reasons you should always disable the Local Admin on your kubernetes cluster and force AAD-based authentication
@@ -88,6 +92,7 @@ Set up alerts for Flux sync failures or AKS node health.
 #### Backup and Restore
 
 Implement a strategy using tools like Velero to back up cluster state and PVs.
+You could use velero for this purpose.
 
 #### Autoscaling
 
@@ -111,9 +116,9 @@ upgradeSettings: {
 }
 ```
 
-### Auto-update
+### Auto-upgrade
 
-You can automatically update your AKS cluster and nodepools when a new version releases (either LTS or none LTS).
+You can automatically upgrade your AKS cluster and nodepools when a new version releases (either LTS or none LTS).
 
 You can do this by setting the following value in the `properties`;
 ```bicep

@@ -2,7 +2,7 @@ apiVersion: apimanagement.azure.com/v1api20220801
 kind: Service
 metadata:
   name: apim-instance
-  namespace: flux-system
+  namespace: apim-system
 spec:
   location: westeurope
   sku:

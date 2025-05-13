@@ -2,6 +2,6 @@ apiVersion: resources.azure.com/v1api20200601
 kind: ResourceGroup
 metadata:
   name: rg-aso-example-apim-prod-01
-  namespace: flux-system
+  namespace: rg-system
 spec:
   location: westeurope

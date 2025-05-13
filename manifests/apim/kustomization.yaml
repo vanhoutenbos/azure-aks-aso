@@ -1,0 +1,4 @@
+resources:
+  - namespace.yaml
+  - resource-group.yaml
+  - apim-instance.yaml
