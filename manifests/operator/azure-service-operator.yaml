@@ -28,6 +28,11 @@ spec:
   values:
     installCRDs: true
     crdPattern: "resources.azure.com/*;containerservice.azure.com/*;keyvault.azure.com/*;managedidentity.azure.com/*;eventhub.azure.com/*;apimanagement.azure.com/*"
+    webhook:
+      tls:
+        enabled: true
+        certManager:
+          enabled: true
   valuesFrom:
     - kind: Secret
       name: azure-credentials
