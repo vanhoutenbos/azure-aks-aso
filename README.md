@@ -196,5 +196,22 @@ manifests/
 - Check the GitHub Actions logs for deployment errors.
 - Use `kubectl` to debug issues in the AKS cluster.
 
+### no RBAC
+TODO: shouldnt this be scriped in the bicep?
+
+enable using;
+```
+az aks update -g <rgName> -n <aksName> --enable-azure-rbac    
+```
+
+### No access to AKS
+When you get an error like;
+`Error from server (Forbidden): pods is forbidden: User <email> cannot list resource <resource> in API group "" at the cluster scope: User does not have access to the resource in Azure. Update role assignment to allow access.`
+
+Than youll need to (re-)add yourself to the group with the correct rights like so;
+```powershell
+az role assignment create --assignee <email> --role "Azure Kubernetes Service RBAC Cluster Admin" --scope $(az aks show -g <rgName> -n <aksName> --query id -o tsv) 
+```
+
 ## License
 This project is licensed under the MIT License.
