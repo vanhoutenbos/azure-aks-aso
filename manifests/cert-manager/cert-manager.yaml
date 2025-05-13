@@ -1,17 +1,17 @@
-apiVersion: source.toolkit.fluxcd.io/v1beta2
+apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
   name: cert-manager
-  namespace: flux-system
+  namespace: cert-manager
 spec:
   interval: 1h
   url: https://charts.jetstack.io
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: cert-manager
-  namespace: flux-system
+  namespace: cert-manager
 spec:
   releaseName: cert-manager
   chart:
@@ -20,10 +20,10 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: cert-manager
-        namespace: flux-system
-      version: "v1.12.2" # Use the desired version of cert-manager
+        namespace: cert-manager
+      version: "v1.12.*"
   interval: 5m
   install:
     createNamespace: true
   values:
-    installCRDs: true # Ensure CRDs are installed
+    installCRDs: true
