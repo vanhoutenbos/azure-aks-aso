@@ -47,5 +47,5 @@ jobs:
           AZURE_CLIENT_ID: .clientId,
           AZURE_CLIENT_SECRET: .clientSecret
         } | to_entries | .[] | "--from-literal=" + .key + "=" + .value' | \
-        xargs kubectl create secret generic aso-controller-settings --namespace flux-system --dry-run=client -o yaml | \
+        xargs kubectl create secret generic aso-credential --namespace flux-system --dry-run=client -o yaml | \
         kubectl apply -f -
