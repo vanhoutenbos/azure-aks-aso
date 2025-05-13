@@ -13,4 +13,4 @@ spec:
   identity:
     type: SystemAssigned
   owner: 
-    name: rg-aso-example-prod-01
+    name: rg-aso-example-apim-prod-01

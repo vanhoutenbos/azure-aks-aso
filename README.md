@@ -39,6 +39,8 @@ Whilst also keeping in mind Best Practices which you can find below.
 The example used is **NOT** production ready, there are some things that you will need to consider which will be explained below!
 The example is purely as a **Proof Of Concept** to address my motivation, but I will give some tips how to make it production ready!
 
+ASO also advises to not run their system on a [free-tier based AKS cluster](https://azure.github.io/azure-service-operator/#installation:~:text=of%20the%20wildcards.-,Warning,-Make%20sure%20to)
+
 #### Networking
 
 For networking I now use the default that Microsoft provides but for security reasons like pod-level isolation you should consider using [Azure Network Policies](https://learn.microsoft.com/en-us/azure/aks/use-network-policies) or [Calico](https://learn.microsoft.com/en-us/azure/aks/use-network-policies#using-calico-network-policy).
