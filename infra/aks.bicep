@@ -81,12 +81,21 @@ resource fluxConfig 'Microsoft.KubernetesConfiguration/fluxConfigurations@2023-0
       timeoutInSeconds: 600
     }
     kustomizations: {
+      certns: {
+        path: './manifests/cert-manager/namespace.yaml'
+        prune: true
+        wait: true
+        timeoutInSeconds: 120
+      }
       cert: {
-        path: './manifests/cert-manager'
+        path: './manifests/cert-manager/cert-manager.yaml'
         prune: true
         wait: true
         timeoutInSeconds: 600 
         retryIntervalInSeconds: 60 
+        dependsOn: [
+          'certns'
+        ]
       }
       operator: {
         path: './manifests/operator'
